@@ -182,4 +182,5 @@ example/src/ru/truba/touchgallery/TouchView
 bin/
 gen/
 target/
+libs/
 
