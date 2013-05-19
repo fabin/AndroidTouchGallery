@@ -21,6 +21,7 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import ru.truba.touchgallery.TouchView.TouchImageView;
 
@@ -28,7 +29,8 @@ import ru.truba.touchgallery.TouchView.TouchImageView;
  This class implements method to help <b>TouchImageView</b> fling, draggin and scaling.
  */
 public class GalleryViewPager extends ViewPager {
-    PointF last;
+    private static final String	TAG	= GalleryViewPager.class.getName();
+	PointF last;
     public TouchImageView mCurrentView;
     public GalleryViewPager(Context context) {
         super(context);
@@ -89,23 +91,35 @@ public class GalleryViewPager extends ViewPager {
 
         float [] difference = handleMotionEvent(event);
 
-        if (mCurrentView.pagerCanScroll()) {
-            return super.onInterceptTouchEvent(event);
-        }
-        else {
-            if (difference != null && mCurrentView.onRightSide && difference[0] < 0) //move right
-            {
-                return super.onInterceptTouchEvent(event);
-            }
-            if (difference != null && mCurrentView.onLeftSide && difference[0] > 0) //move left
-            {
-                return super.onInterceptTouchEvent(event);
-            }
-            if (difference == null && ( mCurrentView.onLeftSide || mCurrentView.onRightSide))
-            {
-                return super.onInterceptTouchEvent(event);
-            }
-        }
+		try
+		{
+
+			if (mCurrentView.pagerCanScroll())
+			{
+				return super.onInterceptTouchEvent(event);
+			}
+			else
+			{
+				if (difference != null && mCurrentView.onRightSide && difference[0] < 0) // move right
+				{
+					return super.onInterceptTouchEvent(event);
+				}
+				if (difference != null && mCurrentView.onLeftSide && difference[0] > 0) // move left
+				{
+					return super.onInterceptTouchEvent(event);
+				}
+				if (difference == null && (mCurrentView.onLeftSide || mCurrentView.onRightSide))
+				{
+					return super.onInterceptTouchEvent(event);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			// it happens occasionally when you use ImageLoader(https://github.com/novoda/ImageLoader) and zoom in and
+			// then zoom out to original and go on zooming out
+			Log.e(TAG, e.getMessage(), e);
+		}
         return false;
     }
 }

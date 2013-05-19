@@ -101,6 +101,11 @@ public class TouchImageView extends ImageView {
 
         init();
     }
+    
+    public void setMaxScale(float maxScale){
+		this.maxScale = maxScale;
+	}
+    
     public TouchImageView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
